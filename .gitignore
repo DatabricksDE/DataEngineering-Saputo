@@ -1,0 +1,16 @@
+# MacOs 
+.DS_Store
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS
+.vscode/
+
+# CSV
+*.csv
+
+# Excel
+Extract*.xlsx
