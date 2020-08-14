@@ -11,7 +11,7 @@ from json import dumps
 
 from etl.FTP import ClassFTP
 from etl.GeneralFunctions import to_gcs_bucket, getFilesOutput, transformToPath
-from etl.GeneralClasses import RelationalTable, WorkOrders, Incidents
+from etl.GeneralClasses import RelationalTable, WorkOrders, Incidents, AbstractClass
 from etl.GeneralFunctions import getHostName, getUserName, getPassword
 
 def saputoProcess(request):
@@ -58,7 +58,8 @@ def saputoProcess(request):
                 #     obj = Incidents(basename(file))
             
             logging.info('7. Uploading files to FTP')
-            transfer.moveFilesToFTP(list(map(transformToPath, getFilesOutput())))
+            #transfer.moveFilesToFTP(list(map(transformToPath, getFilesOutput())))
+            transfer.moveFilesToFTP(AbstractClass.list_output_files)
 
         logging.info('8. Ending process')
         return dumps({'success': True}), 200, {'ContentType': 'application/json'}

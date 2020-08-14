@@ -17,6 +17,9 @@ class RelationalTable:
     self.df = pd.read_excel(open(self.file_path, 'rb'))
 
 class AbstractClass:
+  # Class attribute
+  list_output_files = []
+
   def __init__(self, file_path:Path):
     self.file_path = file_path
     self.df = None
@@ -31,7 +34,7 @@ class AbstractClass:
     pass
 
   def toCSV(self)->None:
-    """Transforms DataFrame to CSV file
+    """Transforms DataFrame to CSV file and saves Path class attribute list_output_files
     Args:
       None
     
@@ -41,11 +44,17 @@ class AbstractClass:
     import csv
     from os import getcwd
     from os.path import basename
+    from etl.GeneralFunctions import getPath
     
     file_base_name = basename(self.file_path)
+    file_path = getPath("{file_base_name}.csv".format(file_base_name=file_base_name[0:file_base_name.find('.',0,len(file_base_name))]))
     
-    self.df.to_csv(Path(getcwd(), 'output', "{file_base_name}.csv".format(file_base_name=file_base_name[0:file_base_name.find('.',0,len(file_base_name))])),  encoding='utf-8', line_terminator='\n', quoting=csv.QUOTE_ALL, quotechar='"', index=False)
-  
+    #self.df.to_csv(Path(getcwd(), 'output', "{file_base_name}.csv".format(file_base_name=file_base_name[0:file_base_name.find('.',0,len(file_base_name))])),  encoding='utf-8', line_terminator='\n', quoting=csv.QUOTE_ALL, quotechar='"', index=False)
+    self.df.to_csv(file_path,  encoding='utf-8', line_terminator='\n', quoting=csv.QUOTE_ALL, quotechar='"', index=False)
+    
+    # Append to list_output_files
+    AbstractClass.list_output_files.append(file_path)
+
   def __del__(self):
     logging.info('Object Terminated')
     
