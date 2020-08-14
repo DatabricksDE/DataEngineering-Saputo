@@ -8,7 +8,7 @@ def decoratorGetPath(function):
     def wrapper(file_name:str):
         return Path('/tmp', file_name)
     return wrapper
-@decoratorGetPath
+#@decoratorGetPath
 def getPath(file_name:str):
     """Getting the local Path, deactivate decorator for local testing
     Arguments:
