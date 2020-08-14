@@ -2,18 +2,19 @@
 # Luis Enrique Fuentes Plata
 
 from typing import Optional
+from pathlib import Path
+from os import getcwd
 import logging
 import pandas as pd
 import numpy as np
 import re
-from pathlib import Path
 
 from etl.GeneralFunctions import getPath, fixColumns
 
 class RelationalTable:
   def __init__(self, file_name:str):
-    self.file_path = getPath(file_name)
-    self.df = pd.read_excel(self.file_path)
+    self.file_path = Path(getcwd(), 'input', file_name)
+    self.df = pd.read_excel(open(self.file_path, 'rb'))
 
 class AbstractClass:
   def __init__(self, file_path:Path):
@@ -49,8 +50,8 @@ class AbstractClass:
     logging.info('Object Terminated')
     
 class WorkOrders(AbstractClass):
-  def __init__(self, file_name:str):
-    super(WorkOrders, self).__init__(file_path=getPath(file_name))
+  def __init__(self, file_path:Path):
+    super(WorkOrders, self).__init__(file_path=file_path)
 
   def loadDataFrame(self)->None:
     """ Loading data effectively from a .xlsx to a DataFrame, reindexing rows.

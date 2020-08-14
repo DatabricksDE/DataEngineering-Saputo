@@ -30,8 +30,8 @@ class ClassFTP:
         Returns:
             list: List of files donwloaded
         """
-        from pathlib import Path
         from os import getcwd
+        from etl.GeneralFunctions import getPath
 
         try:
             
@@ -42,8 +42,8 @@ class ClassFTP:
                 files_out = []
             
                 for file in ftp.listdir(f'Inbound/Saputo/'):
-                    local_file = Path(getcwd(), 'input', file)
-                    ftp.get(f'Inbound/Saputo/{file}', local_file) # remote path, local path
+                    local_file = getPath(file)
+                    ftp.get(f'Inbound/Saputo/{file}', local_file) # (remote path, local path)
                     files_out.append(local_file)
                     #ftp.remove(file)
             

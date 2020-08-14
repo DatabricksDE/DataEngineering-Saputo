@@ -48,7 +48,7 @@ def saputoProcess(request):
                 logging.info(f'6.1. Processing {file}')
 
                 if 'work' in basename(file).strip().lower():
-                    obj = WorkOrders(basename(file))
+                    obj = WorkOrders(file)
                     obj.loadDataFrame()
                     obj.cleanDataFrame()
                     obj.joinWithRelationalTable(rt)
