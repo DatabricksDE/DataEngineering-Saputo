@@ -90,7 +90,7 @@ class ClassFTP:
             with self.__ssh_client.open_sftp() as ftp:            
                 
                 for file in ftp.listdir(f'Inbound/Saputo/'):
-                    ftp.remove(Path('Inbound/Saputo/',file))
+                    ftp.remove(str(Path('Inbound/Saputo/',file)))
             
                 ftp.close() # sometimes with does not close the connection, therefore connection is explicitly closed
 
