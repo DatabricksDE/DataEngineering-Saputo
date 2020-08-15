@@ -30,8 +30,8 @@ class ClassFTP:
         Returns:
             list: List of files donwloaded
         """
-        from pathlib import Path
         from os import getcwd
+        from etl.GeneralFunctions import getPath
 
         try:
             
@@ -42,8 +42,8 @@ class ClassFTP:
                 files_out = []
             
                 for file in ftp.listdir(f'Inbound/Saputo/'):
-                    local_file = Path(getcwd(), 'input', file)
-                    ftp.get(f'Inbound/Saputo/{file}', local_file) # remote path, local path
+                    local_file = getPath(file)
+                    ftp.get(f'Inbound/Saputo/{file}', local_file) # (remote path, local path)
                     files_out.append(local_file)
                     #ftp.remove(file)
             
@@ -53,7 +53,7 @@ class ClassFTP:
         except Exception as e:
             logging.error(e)
 
-    def moveFilesToFTP(self, file_list:list):
+    def moveFilesToFTP(self, file_list:list)->None:
         """Upload files in Output to FTP Saputo
 
         Args:
@@ -74,6 +74,31 @@ class ClassFTP:
         except Exception as e:
             logging.error(e)
     
+    def deleteFilesFromFTP(self)->None:
+        """Deletes a file from the FTP server
+
+        Args:
+            None
+        
+        Returns:
+            None
+        """
+        from pathlib import Path
+        try:
+            self.__ssh_client.connect(hostname=self.__HOSTNAME, username=self.__USERNAME, password=self.__PASSWORD, allow_agent=False, look_for_keys=False)
+
+            with self.__ssh_client.open_sftp() as ftp:            
+                
+                for file in ftp.listdir(f'Inbound/Saputo/'):
+                    ftp.remove(str(Path('Inbound/Saputo/',file)))
+            
+                ftp.close() # sometimes with does not close the connection, therefore connection is explicitly closed
+
+        except Exception as e:
+            logging.error(e)
+
     def __del__(self):
         self.__ssh_client.close()
         logging.info("Client FTP Connection deleted")
+
+    

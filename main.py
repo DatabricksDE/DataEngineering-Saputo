@@ -10,8 +10,8 @@ from os.path import basename
 from json import dumps
 
 from etl.FTP import ClassFTP
-from etl.GeneralFunctions import to_gcs_bucket, getFilesOutput, transformToPath
-from etl.GeneralClasses import RelationalTable, WorkOrders, Incidents
+from etl.GeneralFunctions import to_gcs_bucket
+from etl.GeneralClasses import RelationalTable, WorkOrders, Incidents, AbstractClass
 from etl.GeneralFunctions import getHostName, getUserName, getPassword
 
 def saputoProcess(request):
@@ -48,7 +48,7 @@ def saputoProcess(request):
                 logging.info(f'6.1. Processing {file}')
 
                 if 'work' in basename(file).strip().lower():
-                    obj = WorkOrders(basename(file))
+                    obj = WorkOrders(file)
                     obj.loadDataFrame()
                     obj.cleanDataFrame()
                     obj.joinWithRelationalTable(rt)
@@ -58,9 +58,12 @@ def saputoProcess(request):
                 #     obj = Incidents(basename(file))
             
             logging.info('7. Uploading files to FTP')
-            transfer.moveFilesToFTP(list(map(transformToPath, getFilesOutput())))
+            transfer.moveFilesToFTP(AbstractClass.list_output_files)
 
-        logging.info('8. Ending process')
+            logging.info('8. Deleting files from FTP')
+            transfer.deleteFilesFromFTP()
+
+        logging.info('9. Ending process')
         return dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
     except Exception as e:

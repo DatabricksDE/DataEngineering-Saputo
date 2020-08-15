@@ -2,20 +2,24 @@
 # Luis Enrique Fuentes Plata
 
 from typing import Optional
+from pathlib import Path
+from os import getcwd
 import logging
 import pandas as pd
 import numpy as np
 import re
-from pathlib import Path
 
 from etl.GeneralFunctions import getPath, fixColumns
 
 class RelationalTable:
   def __init__(self, file_name:str):
-    self.file_path = getPath(file_name)
-    self.df = pd.read_excel(self.file_path)
+    self.file_path = Path(getcwd(), 'input', file_name)
+    self.df = pd.read_excel(open(self.file_path, 'rb'))
 
 class AbstractClass:
+  # Class attribute
+  list_output_files = []
+
   def __init__(self, file_path:Path):
     self.file_path = file_path
     self.df = None
@@ -30,7 +34,7 @@ class AbstractClass:
     pass
 
   def toCSV(self)->None:
-    """Transforms DataFrame to CSV file
+    """Transforms DataFrame to CSV file and saves Path class attribute list_output_files
     Args:
       None
     
@@ -40,17 +44,23 @@ class AbstractClass:
     import csv
     from os import getcwd
     from os.path import basename
+    from etl.GeneralFunctions import getPath
     
     file_base_name = basename(self.file_path)
+    file_path = getPath("{file_base_name}.csv".format(file_base_name=file_base_name[0:file_base_name.find('.',0,len(file_base_name))]))
     
-    self.df.to_csv(Path(getcwd(), 'output', "{file_base_name}.csv".format(file_base_name=file_base_name[0:file_base_name.find('.',0,len(file_base_name))])),  encoding='utf-8', line_terminator='\n', quoting=csv.QUOTE_ALL, quotechar='"', index=False)
-  
+    #self.df.to_csv(Path(getcwd(), 'output', "{file_base_name}.csv".format(file_base_name=file_base_name[0:file_base_name.find('.',0,len(file_base_name))])),  encoding='utf-8', line_terminator='\n', quoting=csv.QUOTE_ALL, quotechar='"', index=False)
+    self.df.to_csv(file_path,  encoding='utf-8', line_terminator='\n', quoting=csv.QUOTE_ALL, quotechar='"', index=False)
+    
+    # Append to list_output_files
+    AbstractClass.list_output_files.append(file_path)
+
   def __del__(self):
     logging.info('Object Terminated')
     
 class WorkOrders(AbstractClass):
-  def __init__(self, file_name:str):
-    super(WorkOrders, self).__init__(file_path=getPath(file_name))
+  def __init__(self, file_path:Path):
+    super(WorkOrders, self).__init__(file_path=file_path)
 
   def loadDataFrame(self)->None:
     """ Loading data effectively from a .xlsx to a DataFrame, reindexing rows.
