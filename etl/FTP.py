@@ -53,7 +53,7 @@ class ClassFTP:
         except Exception as e:
             logging.error(e)
 
-    def moveFilesToFTP(self, file_list:list):
+    def moveFilesToFTP(self, file_list:list)->None:
         """Upload files in Output to FTP Saputo
 
         Args:
@@ -74,6 +74,30 @@ class ClassFTP:
         except Exception as e:
             logging.error(e)
     
+    def deleteFilesFromFTP(self)->None:
+        """Deletes a file from the FTP server
+
+        Args:
+            None
+        
+        Returns:
+            None
+        """
+        try:
+            self.__ssh_client.connect(hostname=self.__HOSTNAME, username=self.__USERNAME, password=self.__PASSWORD, allow_agent=False, look_for_keys=False)
+
+            with self.__ssh_client.open_sftp() as ftp:            
+                
+                for file in ftp.listdir(f'Inbound/Saputo/'):
+                    ftp.remove(file)
+            
+                ftp.close() # sometimes with does not close the connection, therefore connection is explicitly closed
+
+        except Exception as e:
+            logging.error(e)
+
     def __del__(self):
         self.__ssh_client.close()
         logging.info("Client FTP Connection deleted")
+
+    

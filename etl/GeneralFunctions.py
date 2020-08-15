@@ -93,24 +93,3 @@ def fixColumns(column_name:str)->str:
         [str]: clean string
     """
     return column_name.strip().lower().replace(' ','_')
-
-def getFilesOutput()->list:
-    """Returns a list files (str) for output directory
-
-    Returns:
-        list: List of files in Output directory
-    """
-    from os import getcwd
-    import glob
-    return glob.glob(str(Path(getcwd(),'output','*.csv')))
-
-def transformToPath(file:str)->Path:
-    """Receives a file in a string format and returns a Pathlib object (for any OS)
-
-    Args:
-        file (str): File in a string format
-
-    Returns:
-        Path: Location Path indepently of the OS
-    """
-    return Path(file)
