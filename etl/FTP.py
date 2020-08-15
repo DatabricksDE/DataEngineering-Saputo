@@ -83,13 +83,14 @@ class ClassFTP:
         Returns:
             None
         """
+        from pathlib import Path
         try:
             self.__ssh_client.connect(hostname=self.__HOSTNAME, username=self.__USERNAME, password=self.__PASSWORD, allow_agent=False, look_for_keys=False)
 
             with self.__ssh_client.open_sftp() as ftp:            
                 
                 for file in ftp.listdir(f'Inbound/Saputo/'):
-                    ftp.remove(file)
+                    ftp.remove(Path('Inbound/Saputo/',file))
             
                 ftp.close() # sometimes with does not close the connection, therefore connection is explicitly closed
 
