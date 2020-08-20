@@ -49,13 +49,13 @@ def saputoProcess(request):
 
                 if 'work' in basename(file).strip().lower():
                     obj = WorkOrders(file)
-                    obj.loadDataFrame()
-                    obj.cleanDataFrame()
-                    obj.joinWithRelationalTable(rt)
-                    obj.toCSV()
-
-                # else:
-                #     obj = Incidents(basename(file))
+                else:
+                    obj = Incidents(file)
+                
+                obj.loadDataFrame()
+                obj.cleanDataFrame()
+                obj.joinWithRelationalTable(rt)
+                obj.toCSV()
             
             logging.info('7. Uploading files to FTP')
             transfer.moveFilesToFTP(AbstractClass.list_output_files)
