@@ -23,6 +23,7 @@ CREATE OR REPLACE PROCEDURE DW.SPW_T_SAPUTO (iCommit IN NUMBER DEFAULT 2000
 ***********************************************************************************/
 /*******************************************************************************************
 *  Generated using sp_gen_bulk() jg 2006
+*  pbrun dw_run.sh -A logistics -D NO -R incr -T t_saputo -S "DW.SPW_T_SAPUTO" < ~/cc/loadyes
 *******************************************************************************************/
 
 -- Data to INSERT INTO T_SAPUTO
@@ -458,7 +459,7 @@ LOOP
                 actual_end_date = actual_end_date_t(i),
                 source = source_t(i),
                 dw_mod_date = SYSDATE,
-                dw_load_date = SYSDATE
+                dw_load_date = dw_load_date_t(i)
         WHERE ticketid = ticketid_t(i)
         ;
 --HADLE OTHER ERRORS
