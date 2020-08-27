@@ -81,7 +81,7 @@ CREATE TABLE DW.T_SAPUTO
     ,individual_transfers VARCHAR2(3)
     ,group_transfers VARCHAR2(3)
     ,template_name VARCHAR2(89)
-    ,requested_by_organization VARCHAR2(34)
+    ,requested_by_organization VARCHAR2(50)
     ,requested_by_full_name VARCHAR2(41)
     ,requested_by_email VARCHAR2(58)
     ,customer_internet_email VARCHAR2(58)

@@ -97,6 +97,10 @@ class WorkOrders(AbstractClass):
 
     for column in dates:
       self.df[column] = self.df[column].apply(lambda x: "" if pd.isna(x) else str(x).strip())
+    
+    # Detail description is not being saved as a clob in the final table
+    for column in ['detailed_decription']:
+      self.df[column] = self.df[column].apply(lambda x: str(x)[0:3985])
   
   def joinWithRelationalTable(self, rt:RelationalTable)->None:
     """ With Association, using the rt instance to get work_orders and db_table
@@ -145,6 +149,10 @@ class Incidents(AbstractClass):
 
     for column in dates:
       self.df[column] = self.df[column].apply(lambda x: "" if pd.isna(x) else str(x).strip())
+    
+    # Detail description is not being saved as a clob in the final table
+    for column in ['detailed_decription', 'resolution']:
+      self.df[column] = self.df[column].apply(lambda x: str(x)[0:3985])
   
   def joinWithRelationalTable(self, rt:RelationalTable)->None:
     """ With Association, using the rt instance to get incidents and db_table
