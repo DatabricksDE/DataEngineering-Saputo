@@ -99,7 +99,7 @@ class WorkOrders(AbstractClass):
       self.df[column] = self.df[column].apply(lambda x: "" if pd.isna(x) else str(x).strip())
     
     # Detail description is not being saved as a clob in the final table
-    for column in ['detailed_decription']:
+    for column in ['detailed_description']:
       self.df[column] = self.df[column].apply(lambda x: str(x)[0:3985])
   
   def joinWithRelationalTable(self, rt:RelationalTable)->None:
