@@ -69,3 +69,5 @@ def saputoProcess(request):
     except Exception as e:
         logging.exception(e)
         return dumps({'success': False}), 400, {'ContentType': 'application/json'}
+    finally:
+        del transfer
